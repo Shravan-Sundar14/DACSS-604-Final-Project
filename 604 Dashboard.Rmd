@@ -1,0 +1,65 @@
+---
+title: "604 Dashboard "
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+churn_data <- read_csv("Customer Churn.csv")
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Frefuency of usage with respect to charge 
+
+```{r}
+library(ggplot2)
+library(readr)
+ggplot(churn_data, aes(x = `Frequency of use`, y = `Charge  Amount`, color = `Churn`)) +
+  geom_point(alpha = 0.6) +
+  labs(title = "Frequency of Use vs Charge Amount", x = "Frequency of Use", y = "Charge Amount") +
+  theme_minimal()
+
+
+
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Subscription Length By Charge Amount 
+
+```{r}
+ggplot(churn_data, aes(x = `Subscription  Length`, y = `Charge  Amount`, color = `Churn`)) +
+  geom_line(stat = "summary", fun = "mean") +
+  labs(title = "Average Charge Amount by Subscription Length", x = "Subscription Length", y = "Charge Amount") +
+  theme_minimal()
+
+
+
+
+```
+
+### Pie Chart Of Churn Propotion
+
+```{r}
+library(dplyr)
+churn_counts <- churn_data %>%
+  count(`Churn`) %>%
+  mutate(percentage = n / sum(n))
+
+ggplot(churn_counts, aes(x = "", y = percentage, fill = `Churn`)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  labs(title = "Proportion of Churn") +
+  theme_void()
+
+```
+
